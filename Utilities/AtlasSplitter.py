@@ -99,10 +99,6 @@ class AtlasSplitter(with_metaclass(Singleton)):
         hou.node(path).layoutChildren()
 
 
-
-        print("made nodes")
-            
-
 #################################################################
         return atlasMeshOutputs
 
