@@ -5,7 +5,7 @@ You will need to install Quixel Bridge to use this mod
 
 ## Megascans 4.6 Installation for Houdini 19.5 
 1. Open Quixel Bridge and download the houdini plugin by going to Edit > Manage Plugins > Houdini 4.6 and download the plugin
-2. As this is not a vaild version for 19.5 you will have to mannually point to the plugin in you houdini 19.5 .env file or copy the old MegascansPlugin.json (might be in documents > Houdini19.0 > packages) into your packages folder in documents > Houdini19.5
+2. As this is not a vaild version for 19.5 you will have to mannually point to the plugin in you houdini 19.5 .env file or copy the old MegascansPlugin.json (might be in documents > Houdini19.0 > packages if you install for a previous version) into your packages folder in documents > Houdini19.5
 3. If you do not have any of these manually create a packages folder and add the MegascansPlugin.json
 4. Modify the .json file to point to the install location for your MSLiveLink
 5. Launch Houdini 19.5 and check that Megascans is available the upper tabs
