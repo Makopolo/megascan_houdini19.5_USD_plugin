@@ -16,6 +16,6 @@ You will need to install Quixel Bridge to use this mod
 2. in C:\MegaScan\Library\support\plugins\houdini\4.6\MSLiveLink\scripts\python\MSPlugin\Utilities (or where-ever you installed) replace USDVarient.py
 3. in C:\MegaScan\Library\support\plugins\houdini\4.6\MSLiveLink\scripts\python\MSPlugin\AssetImporters reaplce Import3D.py
 4. if you also want the atlas splitter to work with geometry in solaris you can replace AtlasSplitter.py in C:\MegaScan\Library\support\plugins\houdini\4.6\MSLiveLink\scripts\python\MSPlugin\Utilities However this quite janky. This will only work when using "Use Atlas Splitter" on the plugin. If you check import Asset to USD stage it will only import the material node.
-I suggest not to copy this if you dont want the splitter to make node in the /obj context
+I suggest not to copy this if you only want the splitter to make node in the /obj context
 
 This should now create extra component builder nodes with all the variants connected.
