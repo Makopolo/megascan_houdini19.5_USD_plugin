@@ -1,6 +1,6 @@
 # megascan_houdini19.5_USD_plugin
 
-This is a modification to the Houdini Megascans plugin (Windows) so that you can import varients and assets using the component builder method.
+This is a modification to the Houdini Megascans plugin (Windows) so that you can import varients and assets using the component builder method (Solaris).
 You will need to install Quixel Bridge to use this mod
 
 ## Megascans 4.6 Installation for Houdini 19.5 
