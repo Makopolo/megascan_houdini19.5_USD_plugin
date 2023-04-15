@@ -14,6 +14,6 @@ You will need to install Quixel Bridge to use this mod
 ## Mod Installation
 1. Create a orig folder and create a backup of all the files you will modify
 2. in C:\MegaScan\Library\support\plugins\houdini\4.6\MSLiveLink\scripts\python\MSPlugin\Utilities (or where-ever you installed) replace USDVarient.py
-3. in D:\MegaScan\Library\support\plugins\houdini\4.6\MSLiveLink\scripts\python\MSPlugin\AssetImporters reaplce Import3D.py
+3. in C:\MegaScan\Library\support\plugins\houdini\4.6\MSLiveLink\scripts\python\MSPlugin\AssetImporters reaplce Import3D.py
 
 This should now create extra component builder nodes with all the variants connected.
