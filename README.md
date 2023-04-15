@@ -1,0 +1,1 @@
+# megascan_houdini19.5_USD_plugin
