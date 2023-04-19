@@ -503,7 +503,17 @@ class Import3DAsset(with_metaclass(Singleton)):
         else :
             fileImportNode = hou.node(targetPath).createNode("file")
             fileImportNode.parm("file").set(meshSourcePath.replace("\\", "/"))
-        transformNode = fileImportNode.createOutputNode("xform")
+        ##########################################
+        #
+        #      Modified section
+        #
+        ##########################################
+
+        normalVert = fileImportNode.createOutputNode("normal")
+        transformNode = normalVert.createOutputNode("xform")
+
+        #####################################################################
+
         transformNode.parm("scale").set(uniformScale)
         
         attribDelete = transformNode
