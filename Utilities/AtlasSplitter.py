@@ -33,9 +33,17 @@ class AtlasSplitter(with_metaclass(Singleton)):
             geometryContainer.parm("ar_disp_height").set(0.008)
         splitterNode = geometryContainer.createNode("quixel_atlas_splitter::1.0")
         opacityMapPath = [opacityMap["path"] for opacityMap in assetData["components"] if opacityMap["type"] == "opacity"]
-        
         splitterNode.parm("filename").set(opacityMapPath[0])
-        materialNode = splitterNode.createOutputNode("material")
+        ##########################################
+        #
+        #      Modified section
+        #
+        ##########################################
+        normalVert = splitterNode.createOutputNode("normal")
+
+        ##############################################
+        
+        materialNode = normalVert.createOutputNode("material")
         materialNode.parm("shop_materialpath1").set(materialPath)
         outputNull = materialNode.createOutputNode("null", importParams["assetName"])
 
@@ -54,11 +62,11 @@ class AtlasSplitter(with_metaclass(Singleton)):
         geometryContainer.moveToGoodPosition()
         hou.node(importParams["assetPath"]).moveToGoodPosition()
 
-##########################################
-#
-#      Modified section
-#
-##########################################
+        ##########################################
+        #
+        #      Modified section
+        #
+        ##########################################
 
         assName = rchop(importParams["assetName"],"_0")
         container = hou.node("/stage").createNode("subnet",importParams["assetName"])
@@ -98,6 +106,7 @@ class AtlasSplitter(with_metaclass(Singleton)):
 
         hou.node(path).layoutChildren()
 
+            
 
 #################################################################
         return atlasMeshOutputs
