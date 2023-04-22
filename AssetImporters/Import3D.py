@@ -35,10 +35,10 @@ class ImportUSD(with_metaclass(Singleton)):
         
 
         if fileextension ==".abc":
-            variantPaths,baseNode,firstVariation = self.scatterAlembicSetup(assetData, importOptions, importParams)
+            variantPaths,baseNode,firstVariation,compVari = self.scatterAlembicSetup(assetData, importOptions, importParams)
 
         else:
-            variantPaths,baseNode, firstVariation = self.scatterSopSetup(assetData, importOptions, importParams)
+            variantPaths,baseNode, firstVariation,compVari = self.scatterSopSetup(assetData, importOptions, importParams)
         
         subnetInput = hou.node(importParams["usdAssetPath"]).item("1")
         subnetOutputNode = hou.node(importParams["usdAssetPath"]).node("output0")
@@ -101,6 +101,37 @@ class ImportUSD(with_metaclass(Singleton)):
             renderSettings.parm("xn__primvarsarnolddisp_height_uhbg").set(0.008)
             variantSet = renderSettings
 
+        ##########################################
+        #
+        #      Modified section
+        #
+        ##########################################
+        assName = rchop(assetMaterial.name(),"_0")
+        
+        matCont = hou.node(importParams["usdAssetPath"]).createNode("materiallibrary", importParams["assetName"])
+        importParams["materialPath"] = matCont.path()        
+        getMat = ImportSurface().importAsset(assetData, importOptions, importParams)
+        matCont.parm("matpathprefix").set("/ASSET/mtl/")
+        matCont.parm("matnode1").set("*")
+
+        #Create component material node set material path and connect the node to component varient and material
+        compMaterial = hou.node(importParams["usdAssetPath"]).createNode('componentmaterial')
+        compMaterial.parm("matspecpath1").set("/ASSET/mtl/"+ importParams["assetName"])
+        compMaterial.setNextInput(compVari)
+        compMaterial.setNextInput(matCont)
+
+        #Create Compoenet geometry output node and set varient mode on
+        compOutput = hou.node(importParams["usdAssetPath"]).createNode('componentoutput',assName+"_ASSET")
+        compOutput.parm("variantlayers").set(1)
+        compOutput.parm("setdefaultvariants").set(1)
+        compOutput.parm("variantdefaultgeo").set(assName + "_0")
+        #Connect outputcomponent node to compoenent material node
+        compOutput.setNextInput(compMaterial)
+        compOutput.setDisplayFlag(True)
+
+        hou.node(importParams["usdAssetPath"]).layoutChildren()
+        ######################################
+
         outputNode = variantSet.createOutputNode("null", importParams["assetName"])
         #outputNode.setDisplayFlag(True)
         
@@ -109,6 +140,14 @@ class ImportUSD(with_metaclass(Singleton)):
 
         #hou.node(importParams["usdAssetPath"]).layoutChildren()
         hou.node(importParams["usdAssetPath"]).moveToGoodPosition()
+
+        ##########################################
+        #
+        #      Modified section
+        #
+        ##########################################
+        hou.node(importParams["usdAssetPath"]).layoutChildren()
+        ######################################
         
     def scatterAlembicSetup(self, assetData, importOptions, importParams):
         variantPaths = []
@@ -170,18 +209,35 @@ class ImportUSD(with_metaclass(Singleton)):
         firstVariation = baseNode
 
         for scatter in scatterSource[1:]:
-            #baseNode.createOutputNode("componentgeometry", scatter.name())
-            baseNode = hou.node(importParams["usdAssetPath"]).createNode("componentgeometry",scatter.name())
-            baseNode.parm("sourcesop").set(scatter.path()) 
-                           
-            #baseNode.parm("asreference").set(1)
-            #baseNode.parm("parentprimkind").set("component")
+            baseNode = baseNode.createOutputNode("sopimport", scatter.name())
+            baseNode.parm("soppath").set(scatter.path())                
+            baseNode.parm("asreference").set(1)
+            baseNode.parm("parentprimkind").set("component")
 
             primitivePath = primitiveBasePath + "/" + scatter.name() #+ "/Geo"
             baseNode.parm("primpath").set(primitivePath)
             variantPaths.append(primitivePath)
+        ##########################################
+        #
+        #      Modified section
+        #
+        ##########################################
+        path = "/stage/" + importParams["assetName"]
+        assName = rchop(importParams["assetName"],"_0")
+        objPath = "/obj/" + importParams["assetName"] + "/lod0/"
+        compVari = hou.node(importParams["usdAssetPath"]).createNode('componentgeometryvariants')
+        for scatter in scatterSource:
+            compGeoNode = hou.node(importParams["usdAssetPath"]).createNode('componentgeometry', assName + "_0")
+            compGeoNode.parm("sourceinput").set(2)
+            compGeoNode.parm("sourcesop").set(scatter.path())
+            compVari.setNextInput(compGeoNode)
 
-        return variantPaths,baseNode,firstVariation
+
+
+        
+
+#####################################################################
+        return variantPaths,baseNode,firstVariation,compVari
 
     def usdAssetSetup(self,  importedAssets,assetData,importOptions, importParams):
         fileextension = os.path.splitext(assetData["meshList"][0]["path"])[1]
